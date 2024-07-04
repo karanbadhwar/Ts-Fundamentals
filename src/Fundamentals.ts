@@ -167,3 +167,38 @@ function isNameInList(name: string): boolean {
 }
 
 const isNameThere = isNameInList("KB");
+
+//Optional, Default and Rest Parameters
+
+function calculatePrice(price: number, discount?: number): number {
+  return price - (discount || 0);
+}
+
+let priceAfterDiscount = calculatePrice(100, 20);
+
+console.log(priceAfterDiscount);
+
+function calculateScore(
+  intialScore: number,
+  penaltyPoints: number = 0 //Default penalty Points
+): number {
+  return intialScore - penaltyPoints;
+}
+
+let scoreAfterPenalty = calculateScore(100, 20);
+let scoreWithoutPenalty = calculateScore(300);
+
+//Rest Parameters
+
+const sum = (message: string, ...numbers: number[]): string => {
+  const doubled = numbers.map((num) => num * 2);
+  console.log(doubled);
+
+  let total = numbers.reduce((prev, curr) => prev + curr, 0);
+
+  return `${message}${total}`;
+};
+
+let resultSum = sum("The Total is: ", 10, 20, 30, 40);
+
+console.log(resultSum);
