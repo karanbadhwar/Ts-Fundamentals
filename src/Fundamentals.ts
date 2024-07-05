@@ -728,6 +728,7 @@ const user: User = {
 //----------------------------------------------------------------
 //Type Assertion, Type Unknown and Type Never
 
+/*
 let someValue: any = "This is a string";
 
 let strLength: number = (someValue as String).length;
@@ -825,3 +826,112 @@ function getColorName(color: Color) {
 console.log(getColorName(Color.red));
 console.log(getColorName(Color.blue));
 console.log(getColorName(Color.green));
+
+*/
+
+//----------------------------------------------------------------
+//ES6 Modules
+
+//TS does not treat any indivual file as a module instead it sums up everything globally.
+//As Every thing is in the global scope, it limits the use of the variables with same name in different modules.
+
+// 1st Approach -> Add Import or Export to make the current file as a module.
+// 2nd Appraoch -> Add proeprty  of Module Detection to the TSconfig file and set it to "Force"
+
+/*
+import newStudent, { sayHello, person, type Student } from "./Actions";
+
+sayHello("TypeScript");
+
+console.log(newStudent);
+
+console.log(person);
+
+const anotherStudent: Student = {
+  name: "Bok",
+  age: 18,
+};
+
+*/
+
+//----------------------------------------------------------------
+//Type Gaurding
+
+//First Type Gaurd -> Typeof
+type ValueType = string | number | boolean;
+
+let value: ValueType;
+const random = Math.random();
+value = random < 0.33 ? "Hello" : random < 0.66 ? 123.456 : true;
+
+function checkValue(val: ValueType) {
+  if (typeof val === "string") {
+    return val.toLowerCase();
+  } else if (typeof val === "number") {
+    console.log(val.toFixed(2));
+    return;
+  } else {
+    console.log(`Boolean: ${val}`);
+    return;
+  }
+}
+
+console.log(checkValue("Hello"));
+checkValue(123);
+checkValue(true);
+
+//Second Type Gaurd -> Equality Narrowing
+
+type Dog = { type: "dog"; name: string; bark: () => void };
+type Cat = { type: "cat"; name: string; meow: () => void };
+type Animal = Dog | Cat;
+
+// function makeSound(animal: Animal) {
+//   if (animal.type === "cat") {
+//     animal.meow();
+//   } else {
+//     animal.bark();
+//   }
+// }
+
+//Thrid Type Gaurd -> check for property
+
+function makeSound(animal: Animal) {
+  if ("bark" in animal) {
+    animal.bark();
+  } else {
+    animal.meow();
+  }
+}
+
+//Fourth Type Gaurd -> Truthy & Falsey Gaurd
+function printLength(str: string | null | undefined) {
+  if (str) {
+    console.log(str.length);
+  } else {
+    console.log("No String provided");
+  }
+}
+
+printLength("Hello");
+printLength("");
+
+//Fifth type Gaurd -> instanceof
+
+// try {
+//   throw "Some Error";
+//   throw new Error("This is an Error of Error type");
+// } catch (error) {
+//   if (error instanceof Error) {
+//     console.log(error.message);
+//   } else {
+//     console.log("Unknown Error");
+//   }
+// }
+
+function checkInput(input: Date | string): string {
+  if (input instanceof Date) {
+    return input.getFullYear().toString();
+  }
+  return input;
+}
