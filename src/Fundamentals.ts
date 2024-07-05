@@ -655,6 +655,7 @@ if (isManager(Emp)) {
 //If I add one more item to the array it will error, as Type is fixed and length as well
 //This is Tuple ->  [string, number]
 
+/*
 let person: [string, number] = ["Karan", 29];
 
 let date: readonly [number, number, number] = [12, 25, 1994];
@@ -721,3 +722,106 @@ const user: User = {
   role: UserRole.Admin,
   contact: ["john.doe@example.com", "123-456-7890"],
 };
+
+*/
+
+//----------------------------------------------------------------
+//Type Assertion, Type Unknown and Type Never
+
+let someValue: any = "This is a string";
+
+let strLength: number = (someValue as String).length;
+
+type Bird = {
+  name: string;
+};
+
+// Assume we have a JSON string from an API or local file
+let birdString = '{"name": "Eagle"}';
+let dogString = '{"breed": "Poodle"}';
+
+// Parse the JSON string into an object
+let birdObject = JSON.parse(birdString);
+let dogObject = JSON.parse(dogString);
+
+let birdy = birdObject as Bird;
+
+//
+//Type Unknown
+
+let unknownValue: unknown;
+
+unknownValue = "Hello World";
+unknownValue = [1, 2, 3, 4, 5];
+
+if (typeof unknownValue === "number") {
+  // TypeScript knows that unknownValue is a string in this block
+  console.log(unknownValue.toFixed(2)); // OK
+}
+
+function runSomeCode() {
+  const random = Math.random();
+  if (random < 0.5) {
+    throw new Error("There was an error");
+  } else {
+    throw "String Error";
+  }
+}
+
+try {
+  runSomeCode();
+} catch (error) {
+  if (error instanceof Error) {
+    console.log(error.message);
+  } else {
+    console.log(error);
+  }
+}
+
+//
+//Type Never
+
+// let neverValue: never = 0; // Cannot assign any value to type Never
+
+type Theme = "light" | "dark";
+
+function checkTheme(theme: Theme): void {
+  if (theme == "light") {
+    console.log("Light Theme");
+    return;
+  }
+  if (theme === "dark") {
+    console.log("Dark Theme");
+    return;
+  }
+}
+
+enum Color {
+  red,
+  blue,
+  green,
+}
+
+function getColorName(color: Color) {
+  switch (color) {
+    case Color.red:
+      return "red";
+
+    case Color.blue:
+      return "blue";
+
+    case Color.green:
+      return "green";
+    default:
+      // At Build Time
+      let unexpectedColor: never = color; // If Color is empty and all types checked it will be NEVER
+      //If showing error that means that the color has not been checked
+
+      //At Runtime
+      throw new Error("Unexpected color: " + color);
+  }
+}
+
+console.log(getColorName(Color.red));
+console.log(getColorName(Color.blue));
+console.log(getColorName(Color.green));
