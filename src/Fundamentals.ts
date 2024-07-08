@@ -858,6 +858,7 @@ const anotherStudent: Student = {
 //Type Gaurding
 
 //First Type Gaurd -> Typeof
+/*
 type ValueType = string | number | boolean;
 
 let value: ValueType;
@@ -935,3 +936,206 @@ function checkInput(input: Date | string): string {
   }
   return input;
 }
+
+//Type Predicate Function
+type Student = {
+  name: string;
+  study: () => void;
+};
+
+type User = {
+  name: string;
+  login: () => void;
+};
+
+type Person = Student | User;
+
+const randomPerson = (): Person => {
+  return Math.random() > 0.5
+    ? { name: "john", study: () => console.log("Studying") }
+    : { name: "mary", login: () => console.log("Logging in") };
+};
+
+// const person = randomPerson();
+
+const person: Person = {
+  name: "Anna",
+  login: function () {
+    console.log("Stuyding...");
+  },
+};
+
+//Type Predicate Function is just to narrow down and to help TS to find out the type.
+function isStudent(person: Person): person is Student {
+  // return "study" in person;
+  return (person as Student).study !== undefined;
+}
+
+if (isStudent(person)) {
+  person.study();
+} else {
+  person.login();
+}
+*/
+
+//----------------------------------------------------------------
+//Discriminated Unions and Exhaustive check using the NEVER type
+//each identified by a unique literal property (the discriminator) -> Discriminated Unions
+
+/*
+type IncrementAction = {
+  type: "increment"; // This creates a discriminator between the TWO same types
+  amount: number;
+  timestamp: number;
+  user: string;
+};
+
+type DecrementAction = {
+  type: "decrement"; // This creates a discriminator between the TWO same types
+  amount: number;
+  timestamp: number;
+  user: string;
+};
+
+type Action = IncrementAction | DecrementAction;
+
+function reducer(state: number, action: Action) {
+  switch (action.type) {
+    case "increment":
+      return (state += action.amount);
+    case "decrement":
+      return (state -= action.amount);
+
+    default:
+      const unExpectedAction: never = action;
+      throw new Error(`Unexpected action ${action}`);
+  }
+}
+
+const newState = reducer(15, {
+  type: "increment",
+  user: " John Doe",
+  amount: 5,
+  timestamp: 123456,
+});
+
+*/
+
+//----------------------------------------------------------------
+//Generics
+// let array1: string[] = ["Apple", "Banana", "Mango"];
+// let array2: number[] = [1, 2, 3];
+// let array3: boolean[] = [true, false, true];
+//                   | |
+//                    V
+
+// let array1: Array<string> = ["Apple", "Banana", "Mango"];
+// let arrays2: Array<number> = [1, 2, 3];
+// let array3: Array<boolean> = [true, false, true];
+
+/*
+function genericFunc<T>(arg: T): T {
+  return arg;
+}
+
+const someStringValue = genericFunc<string>("someStringValue");
+const someNumValue = genericFunc<number>(7);
+
+interface GenericInterface<T> {
+  value: T;
+  getValue: () => T;
+}
+
+const genericString: GenericInterface<string> = {
+  value: "16",
+  getValue() {
+    return this.value;
+  },
+};
+
+//Trying Generics with Async Functions
+async function someFunc(): Promise<number> {
+  return 45667;
+}
+
+ const result = someFunc();
+
+function createArray<T>(length: number, value: T): Array<T> {
+  let result: T[] = [];
+  result = Array(length).fill(value);
+  return result;
+}
+
+let arrayStrings = createArray<string>(3, "hello");
+let arrayNumbers = createArray<number>(4, 100);
+*/
+
+//Generics with multiple Variables
+
+function pair<T, U>(arg1: T, arg2: U): [T, U] {
+  return [arg1, arg2];
+}
+
+let result = pair<number, string>(10, "Hello world");
+
+//Type Constraint on the Generic Type T!!
+function processValue<T extends string | number>(val: T): T {
+  console.log(val);
+  return val;
+}
+
+processValue("Hello");
+processValue(67);
+
+// processValue(true);
+
+type Car = {
+  brand: string;
+  model: string;
+};
+
+const car: Car = {
+  brand: "ford",
+  model: "mustang",
+};
+
+type Product = {
+  name: string;
+  price: number;
+};
+
+const product: Product = {
+  name: "shoes",
+  price: 1.99,
+};
+
+type Student = {
+  name: string;
+  age: number;
+};
+
+const student: Student = {
+  name: "peter",
+  age: 20,
+};
+
+function printName<T extends { name: string }>(input: T): void {
+  console.log(input.name);
+  // console.log(input.price); // as there is not guranteed to have price on T
+}
+
+printName(product);
+printName(student);
+
+//Default Type fo generics
+interface StoreData<T = any> {
+  data: T[];
+}
+
+const storeNumbers: StoreData<number> = {
+  data: [1, 2, 3, 4, 5],
+};
+
+const randomStudd: StoreData = {
+  data: ["random", 2],
+};
