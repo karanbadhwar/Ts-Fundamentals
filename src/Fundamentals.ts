@@ -441,7 +441,7 @@ let tiger: Animal = {
 
 //----------------------------------------------------------------
 //Interface Fundamentals
-
+/*
 interface IBook {
   readonly isbn: number;
   title: string;
@@ -526,6 +526,7 @@ const deepWork: IBook = {
 
 // console.log(lappy.upgradeRam(32));
 
+*/
 //Interface Advanced
 
 /*
@@ -1072,6 +1073,7 @@ let arrayNumbers = createArray<number>(4, 100);
 
 //Generics with multiple Variables
 
+/*
 function pair<T, U>(arg1: T, arg2: U): [T, U] {
   return [arg1, arg2];
 }
@@ -1139,3 +1141,147 @@ const storeNumbers: StoreData<number> = {
 const randomStudd: StoreData = {
   data: ["random", 2],
 };
+
+*/
+
+//----------------------------------------------------------------
+//Fetch Data and DEclaration Files
+
+//Using Zod to validate data at runtime
+/*
+import { z } from "zod";
+
+const url = "https://www.course-api.com/react-tours-project";
+
+const tourSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  info: z.string(),
+  image: z.string(),
+  price: z.string(),
+  someValue: z.string(),
+});
+
+type DataTour = z.infer<typeof tourSchema>;
+
+// type DataTour = {
+//   id: string;
+//   name: string;
+//   info: string;
+//   image: string;
+//   price: string;
+//   // someValue: boolean; // If add non-existing value
+// };
+
+async function fetchData(url: string): Promise<DataTour[]> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("HTTP error! status: " + response.status);
+    }
+    const rawData: DataTour[] = await response.json();
+
+    const result = tourSchema.array().safeParse(rawData);
+
+    if (!result.success) {
+      throw new Error("Invalid data:" + result.error);
+    }
+    console.log(result);
+
+    return result.data;
+  } catch (error) {
+    const errorMsg =
+      error instanceof Error ? error.message : "There was an error!!";
+    console.log(errorMsg);
+    return [];
+  }
+}
+
+const tours = await fetchData(url);
+
+tours.map((tour) => {
+  console.log(tour.someValue); // As someValue does not exist on the data
+});
+*/
+
+//
+//Declaration Files
+// import { type RandomType } from "./types";
+
+//----------------------------------------------------------------
+//Classes
+
+class Book {
+  // title: string; // One way of declaring properties
+  readonly author: string;
+  private checkedOut = false;
+
+  //Look for title second way of declaring properties
+  constructor(public title: string, author: string, private random = "ads") {
+    this.title = title;
+    this.author = author;
+  }
+
+  checkOut() {
+    this.checkedOut = this.toggleCheckOutStatus();
+  }
+
+  public isCheckedOut(): boolean {
+    return this.checkedOut;
+  }
+
+  private toggleCheckOutStatus() {
+    return !this.checkedOut;
+  }
+}
+
+const deepWork = new Book("deep work ", "cal newport");
+
+deepWork.checkOut();
+// console.log(deepWork.isCheckedOut()); // True
+
+class BookTwo {
+  private checkedOut = false;
+  constructor(
+    public title: string,
+    readonly author: string,
+    private price: number
+  ) {}
+
+  // public getPrice(): number {
+  //   return this.price;
+  // }
+
+  //Getter
+  get info() {
+    return `${this.title} by ${this.author}`;
+  }
+
+  //Setter
+  set checkOut(checkOut: boolean) {
+    this.checkedOut = checkOut;
+  }
+
+  //Getter
+  get CheckOut() {
+    return this.checkedOut;
+  }
+}
+
+const habit = new BookTwo("Habits", "Karan", 10);
+
+// habit.title = 4;
+
+//Implementing Interface by the Class
+interface IPerson {
+  name: string;
+  age: number;
+  greet(): void;
+}
+
+class Person implements IPerson {
+  constructor(public name: string, public age: number) {}
+  greet(): void {
+    console.log(`Hello ${this.name}`);
+  }
+}
